@@ -14,6 +14,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 
 VERIFY_TOKEN = "CREATE_YOUR_OWN_RANDOM_VERIFY_TOKEN"
+ACCESS_TOKEN = "YOUR_SECRET_ACCESS_TOKEN"
 
 
 class MainPage(webapp2.RequestHandler):
@@ -58,6 +59,28 @@ class MainPage(webapp2.RequestHandler):
                         logging.info("Post-back")
 
 
+def send_message(recipient_id, message_text, possible_answers):
+    logging.info("Sending message to %r: %s", recipient_id, message_text)
+    headers = {
+        "Content-Type": "application/json"
+    }
+    message = get_postback_buttons_message(message_text, possible_answers)
+    if message is None:
+        message = {"text": message_text}
+
+    raw_data = {
+        "recipient": {
+            "id": recipient_id
+        },
+        "message": message
+    }
+    data = json.dumps(raw_data)
+    r = urlfetch.fetch("https://graph.facebook.com/v2.6/me/messages?access_token=%s" % ACCESS_TOKEN,
+                       method=urlfetch.POST, headers=headers, payload=data)
+    if r.status_code != 200:
+        logging.error("Error sending message: %r", r.status_code)
+
+
 def get_postback_buttons_message(message_text, possible_answers):
     if possible_answers is not None and len(possible_answers) <= 3:
         buttons = []
@@ -80,28 +103,6 @@ def get_postback_buttons_message(message_text, possible_answers):
             }
         }
     return None
-
-
-def send_message(recipient_id, message_text, possible_answers):
-    logging.info("Sending message to %r: %s", recipient_id, message_text)
-    headers = {
-        "Content-Type": "application/json"
-    }
-    message = get_postback_buttons_message(message_text, possible_answers)
-    if message is None:
-        message = {"text": message_text}
-
-    raw_data = {
-        "recipient": {
-            "id": recipient_id
-        },
-        "message": message
-    }
-    data = json.dumps(raw_data)
-    r = urlfetch.fetch("https://graph.facebook.com/v2.6/me/messages?access_token=%s" % VERIFY_TOKEN,
-                       method=urlfetch.POST, headers=headers, payload=data)
-    if r.status_code != 200:
-        logging.error("Error sending message: %r", r.status_code)
 
 
 app = webapp2.WSGIApplication([

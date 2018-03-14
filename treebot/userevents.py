@@ -21,7 +21,5 @@ class UserEventsDao(object):
 
     def get_user_events(self, user):
         events = UserEvent.query(UserEvent.user == user)
-        # events = list(events)
-        # print "Events", events
         sorted_events = sorted(events, key=lambda x: x.date)
         return [(event.direction, event.message) for event in sorted_events]
