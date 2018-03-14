@@ -1,8 +1,8 @@
 import yaml
 
-from harvey.bot import verify_tree, HarveyBot
-from harvey.tree import TREE
-from harvey.mockuserevents import MockUserEventsDao
+from treebot.bot import verify_tree, HarveyBot
+from treebot.tree import TREE
+from treebot.mockuserevents import MockUserEventsDao
 
 
 def callback(user, message, possible_answers):

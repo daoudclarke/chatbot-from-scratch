@@ -6,9 +6,9 @@ import sys
 from google.appengine.api import urlfetch
 import webapp2
 
-from harvey.bot import HarveyBot
-from harvey.tree import TREE
-from harvey.userevents import UserEventsDao
+from treebot.bot import HarveyBot
+from treebot.tree import TREE
+from treebot.userevents import UserEventsDao
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 

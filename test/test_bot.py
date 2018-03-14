@@ -1,5 +1,5 @@
-from harvey.bot import HarveyBot, verify_tree
-from harvey.mockuserevents import MockUserEventsDao
+from treebot.bot import HarveyBot, verify_tree
+from treebot.mockuserevents import MockUserEventsDao
 
 Q1 = 'Hello. How long do you need to stay in the UK?'
 TREE = {
