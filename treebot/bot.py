@@ -14,7 +14,7 @@ def get_content_match(content, tree):
         return matches[0]
 
 
-class HarveyBot(object):
+class TreeBot(object):
     def __init__(self, send_callback, users_dao, tree):
         self.send_callback = send_callback
         self.users_dao = users_dao

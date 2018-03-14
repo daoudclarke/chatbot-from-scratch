@@ -1,4 +1,4 @@
-from treebot.bot import HarveyBot, verify_tree
+from treebot.bot import TreeBot, verify_tree
 from treebot.mockuserevents import MockUserEventsDao
 
 Q1 = 'Hello. How long do you need to stay in the UK?'
@@ -17,7 +17,7 @@ TREE = {
 
 def test_simple_response():
     responses = []
-    bot = HarveyBot(lambda user, message, possible_answers: responses.append((user, message)), MockUserEventsDao(), TREE)
+    bot = TreeBot(lambda user, message, possible_answers: responses.append((user, message)), MockUserEventsDao(), TREE)
     user_id = 1
     bot.handle(user_id, "Hello")
     assert responses == [(1, Q1)]
@@ -27,7 +27,7 @@ def test_simple_response():
 
 def test_partial_match():
     responses = []
-    bot = HarveyBot(lambda user, message, possible_answers: responses.append((user, message)), MockUserEventsDao(), TREE)
+    bot = TreeBot(lambda user, message, possible_answers: responses.append((user, message)), MockUserEventsDao(), TREE)
     user_id = 1
     bot.handle(user_id, "Hello")
     assert responses == [(1, Q1)]

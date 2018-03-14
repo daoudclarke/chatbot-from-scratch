@@ -1,6 +1,6 @@
 import yaml
 
-from treebot.bot import verify_tree, HarveyBot
+from treebot.bot import verify_tree, TreeBot
 from treebot.tree import TREE
 from treebot.mockuserevents import MockUserEventsDao
 
@@ -14,7 +14,7 @@ def callback(user, message, possible_answers):
 
 def run():
     verify_tree(TREE)
-    bot = HarveyBot(callback, MockUserEventsDao(), TREE)
+    bot = TreeBot(callback, MockUserEventsDao(), TREE)
 
     while True:
         value = raw_input('> ')

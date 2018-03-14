@@ -6,7 +6,7 @@ import sys
 from google.appengine.api import urlfetch
 import webapp2
 
-from treebot.bot import HarveyBot
+from treebot.bot import TreeBot
 from treebot.tree import TREE
 from treebot.userevents import UserEventsDao
 
@@ -20,7 +20,7 @@ class MainPage(webapp2.RequestHandler):
     def __init__(self, request=None, response=None):
         super(MainPage, self).__init__(request, response)
         logging.info("Initialising with new bot.")
-        self.bot = HarveyBot(send_message, UserEventsDao(), TREE)
+        self.bot = TreeBot(send_message, UserEventsDao(), TREE)
 
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
@@ -36,18 +36,14 @@ class MainPage(webapp2.RequestHandler):
     def post(self):
         data = json.loads(self.request.body)
         logging.info("Got data: %r", data)
-        # log(data)  # you may not want to log every incoming message in production, but it's good for testing
 
         if data["object"] == "page":
 
             for entry in data["entry"]:
                 for messaging_event in entry["messaging"]:
-                    # the facebook ID of the person sending you the message
                     sender_id = messaging_event["sender"]["id"]
 
                     if messaging_event.get("message"):
-                        # recipient_id = messaging_event["recipient"][
-                        #     "id"]  # the recipient's ID, which should be your page's facebook ID
                         message = messaging_event['message']
                         if message.get('is_echo'):
                             logging.info("Ignoring echo event: " + message.get('text', ''))
@@ -56,13 +52,7 @@ class MainPage(webapp2.RequestHandler):
                         logging.info("Got a message: %s", message_text)
                         self.bot.handle(sender_id, message_text)
 
-                    if messaging_event.get("delivery"):  # delivery confirmation
-                        logging.info("Delivery")
-
-                    if messaging_event.get("optin"):  # optin confirmation
-                        logging.info("Opt-in")
-
-                    if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
+                    if messaging_event.get("postback"):
                         payload = messaging_event['postback']['payload']
                         self.bot.handle(sender_id, payload)
                         logging.info("Post-back")
